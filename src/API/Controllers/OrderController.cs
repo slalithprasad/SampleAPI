@@ -5,9 +5,11 @@ using Business.Models.Response.Common;
 using Microsoft.AspNetCore.Mvc;
 using Business.Mappers;
 using Domain.Models;
+using API.Filters;
 
 namespace API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]

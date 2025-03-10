@@ -60,16 +60,16 @@ public class ExceptionMiddleware
 
         switch (exception.ErrorCode)
         {
-            case "IE401":
+            case "AE401":
                 httpStatusCode = HttpStatusCode.Unauthorized;
                 break;
-            case "IE403":
+            case "AE403":
                 httpStatusCode = HttpStatusCode.Forbidden;
                 break;
-            case "IE404":
+            case "AE404":
                 httpStatusCode = HttpStatusCode.NotFound;
                 break;
-            case "IE410":
+            case "AE410":
                 httpStatusCode = HttpStatusCode.Gone;
                 break;
         }

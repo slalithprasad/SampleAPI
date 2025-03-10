@@ -24,7 +24,7 @@ public class OrderManager : IOrderManager
 
         if (order is null)
         {
-            throw ApiExceptions.OE001;
+            throw ApiExceptions.AE404("Order");
         }
 
         return order;
