@@ -30,7 +30,7 @@ public class OrderManager : IOrderManager
         return order;
     }
 
-    public async Task<(IEnumerable<Order>, long?)> GetAsync(OrderFilter filter, CancellationToken cancellationToken)
+    public async Task<(IEnumerable<Order>, long)> GetAsync(OrderFilter filter, CancellationToken cancellationToken)
     {
         IQueryable<Order> query = _context.Orders.AsNoTracking();
 
