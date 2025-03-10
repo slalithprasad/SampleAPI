@@ -7,7 +7,6 @@ using Business.Mappers;
 using Domain.Models;
 using API.Attributes;
 
-
 namespace API.Controllers
 {
     [Authorize]

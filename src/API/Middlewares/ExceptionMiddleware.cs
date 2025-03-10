@@ -35,6 +35,7 @@ public class ExceptionMiddleware
             await HandleExceptionAsync(context, ex).ConfigureAwait(false);
         }
     }
+    
     private Task HandleOperationCancelledExceptionAsync(HttpContext context, OperationCanceledException exception)
     {
         var response = new ApiResponse(IsSuccess: false, Error: new
