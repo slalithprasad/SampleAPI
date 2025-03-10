@@ -39,6 +39,16 @@ public class OrderManager : IOrderManager
             query = query.Where(o => o.Name != null && o.Name.Contains(filter.Search));
         }
 
+        if (!string.IsNullOrEmpty(filter.Status))
+        {
+            string? orderStatus = Enum.TryParse(filter.Status, true, out OrderStatus status) ? status.ToString() : null;
+
+            if (!string.IsNullOrEmpty(orderStatus))
+            {
+                query = query.Where(o => o.Status == orderStatus);
+            }
+        }
+
         DateTime? fromDate = string.IsNullOrEmpty(filter.FromDate) ? null :
             DateTime.TryParseExact(filter.FromDate, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime from) ? from : null;
 
