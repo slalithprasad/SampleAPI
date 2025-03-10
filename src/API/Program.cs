@@ -84,11 +84,10 @@ try
         options.Path = "/redoc";
     });
 
-    if (app.Environment.IsDevelopment())
-    {
+#if !DEBUG
         app.UseHsts();
         app.UseHttpsRedirection();
-    }
+#endif
 
     app.UseStaticFiles();
     app.UseMiddleware<CorrelationIdMiddleware>();
