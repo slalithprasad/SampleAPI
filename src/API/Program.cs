@@ -15,7 +15,7 @@ try
     var storageConnectionString = config["StorageConnectionString"];
     GlobalDiagnosticsContext.Set("StorageConnectionString", storageConnectionString);
 
-    LogManager.Setup().LoadConfigurationFromXml("NLog.config");
+    LogManager.Setup().LoadConfigurationFromXml("nlog.config");
 
     builder.Logging.ClearProviders();
     builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
