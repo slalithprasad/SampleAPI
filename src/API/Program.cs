@@ -71,6 +71,8 @@ try
 
     builder.Services.AddHealthChecks();
 
+    builder.Services.AddResponseCaching();
+
     builder.Services.AddServices();
 
     WebApplication app = builder.Build();
@@ -89,6 +91,7 @@ try
         app.UseHttpsRedirection();
 #endif
 
+    app.UseResponseCaching();
     app.UseStaticFiles();
     app.UseMiddleware<CorrelationIdMiddleware>();
     app.UseMiddleware<ExceptionMiddleware>();
