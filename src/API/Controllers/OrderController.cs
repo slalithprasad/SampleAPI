@@ -27,7 +27,7 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<ApiResponse>> Get(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse>> Get([FromRoute] int id, CancellationToken cancellationToken)
         {
             Order order = await _manager.GetAsync(id, cancellationToken).ConfigureAwait(false);
             return new ApiResponse(Result: order);
@@ -73,7 +73,7 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken)
         {
             await _manager.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
             return NoContent();
