@@ -50,8 +50,8 @@ try
            document.Info = new OpenApiInfo
            {
                Version = "v1",
-               Title = "DeMeNew Inventory API",
-               Description = "An ASP.NET 9 Web API for DeMeNew Inventory",
+               Title = "Sample API",
+               Description = "An ASP.NET 9 Web API for Sample API",
            };
        };
 
