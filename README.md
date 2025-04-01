@@ -23,8 +23,8 @@ A Sample .NET 9 Web API project template with basic CRUD operations.
 ### 📥 Setup
 1. Clone the repository:  
     ```bash
-    git clone https://github.com/slalithprasad/ConsoleFocus
-    cd ConsoleFocus
+    git clone https://github.com/slalithprasad/SampleAPI
+    cd SampleAPI
     ```
 2. Install the required NuGet packages:  
     ```bash
