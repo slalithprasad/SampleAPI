@@ -6,6 +6,7 @@ using NLog.Web;
 using API.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
+using Scalar.AspNetCore;
 
 try
 {
@@ -60,7 +61,13 @@ try
 
     builder.Services.AddServices();
 
+    builder.Services.AddOpenApi();
+
     WebApplication app = builder.Build();
+
+    app.MapOpenApi();
+
+    app.MapScalarApiReference();
 
     if (!app.Environment.IsDevelopment())
     {

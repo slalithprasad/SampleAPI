@@ -14,8 +14,10 @@
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.*" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.*" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="nlog.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
