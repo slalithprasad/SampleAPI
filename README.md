@@ -9,7 +9,7 @@ A Sample .NET 9 Web API project template with basic CRUD operations.
 ✅ **Model validation** with `DataAnnotations`  
 ✅ **Dependency injection** for better modularity  
 ✅ **Cancellation tokens** for graceful API termination  
-✅ **Swagger integration** for API documentation  
+✅ **Scalar integration** for API documentation  
 ✅ **In-Memory Database** for lightweight data storage  
 
 ---
