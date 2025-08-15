@@ -1,21 +1,29 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using HealthChecks.UI.Client;
 using API.Filters;
 using API.Middlewares;
 using NLog;
-using NSwag;
 using NLog.Web;
 using API.Extensions;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 try
 {
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-    var config = builder.Configuration;
-    var storageConnectionString = config["StorageConnectionString"];
-    GlobalDiagnosticsContext.Set("StorageConnectionString", storageConnectionString);
+    if (builder.Environment.IsDevelopment())
+    {
+        DotNetEnv.Env.Load();
+    }
 
-    LogManager.Setup().LoadConfigurationFromXml("nlog.config");
+    builder.Configuration.AddJsonFile("nlog.settings.json", optional: false, reloadOnChange: true).AddEnvironmentVariables();
+
+    string storageConnectionString = builder.Configuration["STORAGE_CONNECTION_STRING"]!;
+
+    builder.Services.AddHealthChecks().AddAzureBlobStorage(storageConnectionString, name: "blob-storage", failureStatus: HealthStatus.Unhealthy, tags: new[] { "storage", "critical" }).AddCheck("in-memory-db",
+        () => HealthCheckResult.Healthy("In-memory DB is always available"));;
+
+    GlobalDiagnosticsContext.Set("StorageConnectionString", storageConnectionString);
 
     builder.Logging.ClearProviders();
     builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
@@ -43,33 +51,10 @@ try
         options.SuppressModelStateInvalidFilter = true;
     });
 
-    builder.Services.AddOpenApiDocument(options =>
-   {
-       options.PostProcess = document =>
-       {
-           document.Info = new OpenApiInfo
-           {
-               Version = "v1",
-               Title = "Sample API",
-               Description = "An ASP.NET 9 Web API for Sample API",
-           };
-       };
-
-       options.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
-       {
-           Type = OpenApiSecuritySchemeType.ApiKey,
-           Name = "Authorization",
-           In = OpenApiSecurityApiKeyLocation.Header,
-           Description = "Type into the textbox: 'Bearer {your JWT token}'."
-       });
-   });
-
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddHttpClient();
 
     builder.Services.AddResponseCompression();
-
-    builder.Services.AddHealthChecks();
 
     builder.Services.AddResponseCaching();
 
@@ -77,19 +62,11 @@ try
 
     WebApplication app = builder.Build();
 
-    app.UseOpenApi();
-
-    app.UseSwaggerUi();
-
-    app.UseReDoc(options =>
+    if (!app.Environment.IsDevelopment())
     {
-        options.Path = "/redoc";
-    });
-
-#if !DEBUG
         app.UseHsts();
         app.UseHttpsRedirection();
-#endif
+    }
 
     app.UseResponseCaching();
     app.UseStaticFiles();
@@ -98,9 +75,11 @@ try
 
     app.UseResponseCompression();
 
-#if DEBUG
-    app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-#endif
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+    }
+
 
     app.MapHealthChecks("/health", new HealthCheckOptions
     {

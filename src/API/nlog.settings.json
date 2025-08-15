@@ -1,0 +1,60 @@
+{
+  "NLog": {
+    "autoReload": true,
+    "throwConfigExceptions": true,
+    "internalLogLevel": "Info",
+
+    "extensions": [
+      { "assembly": "NLog.Web.AspNetCore" },
+      { "assembly": "NLog.Extensions.AzureBlobStorage" }
+    ],
+
+    "targets": {
+      "console": {
+        "type": "Console",
+        "layout": {
+          "type": "JsonLayout",
+          "includeMdlc": true,
+          "attributes": [
+            { "name": "time",       "layout": "${longdate}" },
+            { "name": "level",      "layout": "${uppercase:${level}}" },
+            { "name": "message",    "layout": "${message}" },
+            { "name": "errorCode",  "layout": "${event-properties:item=ErrorCode}" },
+            { "name": "exception",  "layout": "${exception:format=tostring}" },
+            { "name": "area",       "layout": "${event-properties:item=Area:whenEmpty=${logger}}" },
+            { "name": "logId",      "layout": "${aspnet-request:header=x-log-id}" },
+            { "name": "ip",         "layout": "${aspnet-request:header=x-ip-address}" },
+            { "name": "userAgent",  "layout": "${aspnet-request:header=x-user-agent}" }
+          ]
+        }
+      },
+      "azureblob": {
+        "type": "AzureBlobStorage",
+        "connectionString": "${gdc:item=StorageConnectionString}",
+        "container": "nlogs",
+        "blobName": "${date:format=yyyyMMdd}.json",
+        "layout": {
+          "type": "JsonLayout",
+          "includeMdlc": true,
+          "attributes": [
+            { "name": "time",       "layout": "${longdate}" },
+            { "name": "level",      "layout": "${uppercase:${level}}" },
+            { "name": "message",    "layout": "${message}" },
+            { "name": "errorCode",  "layout": "${event-properties:item=ErrorCode}" },
+            { "name": "exception",  "layout": "${exception:format=tostring}" },
+            { "name": "area",       "layout": "${event-properties:item=Area:whenEmpty=${logger}}" },
+            { "name": "logId",      "layout": "${aspnet-request:header=x-log-id}" },
+            { "name": "ip",         "layout": "${aspnet-request:header=x-ip-address}" },
+            { "name": "userAgent",  "layout": "${aspnet-request:header=x-user-agent}" }
+          ]
+        } 
+      }
+    },
+
+    "rules": [
+      { "logger": "Microsoft.Hosting.Lifetime", "minLevel": "Fatal", "final": true, "writeTo": "azureblob" },
+      { "logger": "Microsoft.AspNetCore.Hosting.Diagnostics", "minLevel": "Fatal", "final": true, "writeTo": "azureblob" },
+      { "logger": "*", "minLevel": "Info",  "maxLevel": "Error", "writeTo": "console,azureblob" }
+    ]
+  }
+}

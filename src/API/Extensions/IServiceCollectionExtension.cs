@@ -11,8 +11,7 @@ public static class IServiceCollectionExtension
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddDbContext<AppDbContext>(options =>
-        options.UseInMemoryDatabase("AppDb"));
+        services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("AppDb"));
 
         services.AddManagers();
         services.AddIntegrations();
