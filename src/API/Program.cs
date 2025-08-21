@@ -71,8 +71,25 @@ try
 
     if (!app.Environment.IsDevelopment())
     {
+        var headers = new HeaderPolicyCollection()
+        .AddContentTypeOptionsNoSniff()
+        .AddReferrerPolicyStrictOriginWhenCrossOrigin()
+        .AddFrameOptionsDeny()
+        .AddContentSecurityPolicy(csp =>
+        {
+            csp.AddDefaultSrc().Self();
+            csp.AddScriptSrc().Self();
+            csp.AddStyleSrc().Self().UnsafeInline();
+            csp.AddImgSrc().Self().Data();
+            csp.AddConnectSrc().Self();
+            csp.AddFrameAncestors().None();
+            csp.AddObjectSrc().None();
+        })
+        .RemoveServerHeader();
+
         app.UseHsts();
         app.UseHttpsRedirection();
+        app.UseSecurityHeaders(headers);
     }
 
     app.UseResponseCaching();
@@ -86,7 +103,6 @@ try
     {
         app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
     }
-
 
     app.MapHealthChecks("/health", new HealthCheckOptions
     {
